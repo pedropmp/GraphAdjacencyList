@@ -10,6 +10,9 @@ class Node:
     def __init__(self, data=None):
         self.data = data
 
+    def __str__(self):
+        return "{}".format(self.data)
+
     def set_data(self, newData): 
         self.data = newData
     
@@ -49,4 +52,3 @@ def IDSourceSink():
 
 nodes = []
 nodes.append(InsertNode())
-print(nodes)
