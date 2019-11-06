@@ -26,8 +26,9 @@ class Graph:
 '''
 Function that creates an Node and adds a new index in the adjacency matrix
 '''
-def InsertNode():
-    newNode = Node()
+def InsertNode(newData):
+    newNode = Node(newData)
+    adjList.append([])
     return  newNode
 
 
@@ -51,4 +52,8 @@ def IDSourceSink():
     pass
 
 nodes = []
-nodes.append(InsertNode())
+adjList = []
+nodes.append(InsertNode('ola mundo'))
+for i in range(0, len(nodes)):
+    print(nodes[i])
+    print(adjList[i])
