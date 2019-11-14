@@ -29,12 +29,14 @@ Graph is a data structure of Vertices and a adjacency list or matrix
 '''
 class Graph:
     def __init__(self, root=None):
-        self.adjList = []
+        self.adjList = []  #adjList is a list of heads, meaning that they are linked lists first nodes
+
 
     def showList(self):
-        for node in self.adjList:
-            while node != None:
-                print(node.val)
+        print(self.adjList)
+        for vertex in self.adjList:
+            while vertex != None:
+                print(vertex[0].data)
 
 '''
 Nodes are the LinkedList elements
@@ -48,13 +50,11 @@ class Node:
 '''
 Function that creates an Node and adds a new index in the adjacency matrix
 '''
-def InsertNode(newData):
-    newNode = Node(newData)
-    adjList.append([])
-    return  newNode
+def InsertVertex(graph, data):
+    graph.adjList.append(Node())
 
 
-def RemNode():
+def RemVertex():
     pass
 
 
@@ -64,6 +64,10 @@ def InsertEdge():
 
 def RemEdge():
     pass
+
+
+def NewGraph():
+    graphs.append(Graph())
 
 
 def ShowGraph():
@@ -94,17 +98,14 @@ def CommandInput():
 
 def main():
     CommandInput()
-    print(fileCommands)
     graphs = []
     vertices = []
     for command in fileCommands:
         if command[0].lower() == 'graph':
             graphs.append(Graph())
         elif command[0].lower() == 'vertex':
-            vertices.append(Vertex(command[1]))
+            InsertVertex(graphs[0], 'ola')
 
-    print(graphs[0])
-    print(vertices[0])
-            
+    graphs[0].showList()
 
 main()
