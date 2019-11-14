@@ -34,9 +34,13 @@ class Graph:
 
     def showList(self):
         print(self.adjList)
-        for vertex in self.adjList:
-            while vertex != None:
-                print(vertex[0].data)
+        for node in self.adjList:
+            while node.next != None:
+                print('{} -> '.format(node.val, end=''))
+                print(node.val)
+            print('{} -> '.format(node.val), end= '')
+            print(node.val)
+            
 
 '''
 Nodes are the LinkedList elements
@@ -51,7 +55,7 @@ class Node:
 Function that creates an Node and adds a new index in the adjacency matrix
 '''
 def InsertVertex(graph, data):
-    graph.adjList.append(Node())
+    graph.adjList.append(Node(data))
 
 
 def RemVertex():
