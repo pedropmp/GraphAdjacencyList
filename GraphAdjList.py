@@ -13,6 +13,7 @@ Vertex are the elements of a Graph
 class Vertex:
     def __init__(self, data=None):
         self.data = data
+        self.next = None
 
     def __str__(self):
         return "{}".format(self.data)
@@ -25,33 +26,26 @@ class Vertex:
 
 
 '''
-Graph is a data structure of Vertices and a adjacency list or matrix
+Graph is a data structure of Vertices and an adjacency list or matrix of adjacencies
 '''
 class Graph:
-    def __init__(self, root=None):
-        self.adjList = []  #adjList is a list of heads, meaning that they are linked lists first nodes
+    def __init__(self):
+        self.adjList = []  #adjList is a list of heads (first vertex/node of a linked list)
 
 
     def showList(self):
         print(self.adjList)
         for vertex in self.adjList:
-            while vertex != None:
-                print(vertex[0].data)
+            while vertex.next != None:
+                print(vertex)
+                
 
-'''
-Nodes are the LinkedList elements
-'''
-class Node:
-    def __init__(self, val):
-        self.val = val
-        self.next = None #pointer initially points to nothing
-
-
-'''
-Function that creates an Node and adds a new index in the adjacency matrix
-'''
-def InsertVertex(graph, data):
-    graph.adjList.append(Node())
+    '''
+    Graph method that creates an Node, where the Vertex and adds a new index in the adjacency matrix.
+    The node created does not have any edges from or to it.
+    '''
+    def InsertVertex(self, data):
+        self.adjList.append(Vertex(data))
 
 
 def RemVertex():
@@ -104,7 +98,8 @@ def main():
         if command[0].lower() == 'graph':
             graphs.append(Graph())
         elif command[0].lower() == 'vertex':
-            InsertVertex(graphs[0], 'ola')
+            newVertex = Vertex(command[1])
+            InsertVertex(graphs[0], newVertex)
 
     graphs[0].showList()
 
