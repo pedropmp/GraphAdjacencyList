@@ -11,25 +11,19 @@ Pourpose: To implement an algorithm to manipulate and show vertices and edges of
 Vertex are the elements of a Graph
 '''
 class Vertex:
-    def __init__(self, data=None):
-        self.data = data
+    def __init__(self, id=None):
+        self.id = id
         self.next = None
 
     def __str__(self):
-        return "{}".format(self.data)
-
-    def set_data(self, newData): 
-        self.data = newData
-    
-    def set_next(self, newNext):
-        self.next = newNext
-
+        return "{}".format(self.id)
 
 '''
 Graph is a data structure of Vertices and an adjacency list or matrix of adjacencies
 '''
 class Graph:
-    def __init__(self):
+    def __init__(self, id):
+        self.id = id
         self.adjList = []  #adjList is a list of heads (first vertex/node of a linked list)
 
 
@@ -44,12 +38,24 @@ class Graph:
     Graph method that creates an Node, where the Vertex and adds a new index in the adjacency matrix.
     The node created does not have any edges from or to it.
     '''
-    def InsertVertex(self, data):
-        self.adjList.append(Vertex(data))
+    def InsertVertex(self, vertexId):
+        self.adjList.append(Vertex(vertexId))
+
+    def RemVertex(self, vertexId):
+        for i in range(0, len(adjList)):
+            if adjList[i].
 
 
-def RemVertex():
-    pass
+def NewVertex(graphId, vertexId):
+    newVertex = Vertex(vertexId)
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.InsertVertex(newVertex)
+
+def DelVertex(graphId, vertexId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.RemVertex(vertexId)
 
 
 def InsertEdge():
@@ -60,8 +66,8 @@ def RemEdge():
     pass
 
 
-def NewGraph():
-    graphs.append(Graph())
+def NewGraph(id):
+    graphs.append(Graph(id))
 
 
 def ShowGraph():
@@ -81,26 +87,35 @@ def CommandInput():
     fileLines = newFile.read().split('\n')
     global fileCommands
     fileCommands = []
-    i = 0
-    while i < len(fileLines):
-        if fileLines[i] != '' and fileLines[i][0] != '*':
-            fileCommands.append([fileLines[i], fileLines[i+1]])
-            i += 2
-        else:
-            i += 1
+    for line in fileLines:
+        if line != '':
+            if line[0] != '*':
+                fileCommands.append(line.split(' '))
+    
+    print('##### Comandos lidos #####\n')
+    for commandLine in fileCommands:
+        for command in commandLine:
+            print('{} '.format(command), end= '')
+        print('')
+    print('\n\n')
     newFile.close()
+
+def menu():
+    for command in fileCommands:
+        if command[0].lower() == 'graph':
+            NewGraph(command[1])
+        elif command[0].lower() == 'vertex':
+            NewVertex(command[1], command[2])
+
 
 def main():
     CommandInput()
+    global graphs
     graphs = []
     vertices = []
-    for command in fileCommands:
-        if command[0].lower() == 'graph':
-            graphs.append(Graph())
-        elif command[0].lower() == 'vertex':
-            newVertex = Vertex(command[1])
-            InsertVertex(graphs[0], newVertex)
+    menu()
 
+  
     graphs[0].showList()
 
 main()

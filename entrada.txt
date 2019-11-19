@@ -1,14 +1,10 @@
-*data_type
-*graph_name
+*data_type graph_id
 
-Graph
-graph1
+Graph graph1
 
-*data_type
-*vertex_data
+*data_type graph_id vertex_id
 
-Vertex
-vertex1
+Vertex graph1 vertex1
 
 
 
