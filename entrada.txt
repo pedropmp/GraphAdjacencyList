@@ -5,6 +5,15 @@ Graph graph1
 *data_type graph_id vertex_id
 
 Vertex graph1 vertex1
+Vertex graph1 vertex2
+Vertex graph1 vertex3
+
+DelVertex graph1 vertex3
+
+Edge graph1 vertex1 vertex2
+
+Show graph1
+
 
 
 
