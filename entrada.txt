@@ -11,8 +11,11 @@ Vertex graph1 vertex3
 DelVertex graph1 vertex3
 
 Edge graph1 vertex1 vertex2
-
 Show graph1
+
+DelEdge graph1 vertex1 vertex2
+Show graph1
+
 
 
 
