@@ -1,14 +1,22 @@
-*data_type
-*graph_name
+*data_type graph_id
 
-Graph
-graph1
+Graph graph1
 
-*data_type
-*vertex_data
+*data_type graph_id vertex_id
 
-Vertex
-vertex1
+Vertex graph1 vertex1
+Vertex graph1 vertex2
+Vertex graph1 vertex3
+
+DelVertex graph1 vertex3
+
+Edge graph1 vertex1 vertex2
+Show graph1
+
+DelEdge graph1 vertex1 vertex2
+Show graph1
+
+
 
 
 
