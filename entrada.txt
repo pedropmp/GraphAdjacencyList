@@ -1,20 +1,40 @@
-*data_type graph_id
+*BidirectedGraph/DirectedGraph
+*Should always be one of the first commmands
+DirectedGraph
 
+*data_type graph_id
 Graph graph1
 
 *data_type graph_id vertex_id
-
 Vertex graph1 vertex1
 Vertex graph1 vertex2
 Vertex graph1 vertex3
+Vertex graph1 vertex4
+Vertex graph1 vertex5
+Vertex graph1 vertex6
 
-DelVertex graph1 vertex3
+*DelVertex graph1 vertex6
 
 Edge graph1 vertex1 vertex2
+Edge graph1 vertex1 vertex5
+Edge graph1 vertex1 vertex1
+Edge graph1 vertex2 vertex3
+Edge graph1 vertex2 vertex4
+Edge graph1 vertex2 vertex5
+Edge graph1 vertex3 vertex4
+Edge graph1 vertex4 vertex5
+
 Show graph1
 
 DelEdge graph1 vertex1 vertex2
 Show graph1
+
+DelVertex graph1 vertex1
+Show graph1
+
+SourcesSinks graph1
+
+Degree graph1 vertex5
 
 
 
