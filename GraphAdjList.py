@@ -19,6 +19,9 @@ class Vertex:
         self.id = str(id)
         self.neighbors = []
         self.index = index
+        self.color = None
+        self.d = None
+        self.pi = None
 
     def __str__(self):
         return "{}".format(self.id)
@@ -305,6 +308,35 @@ class Graph:
         print('Indegree: {}\nOutdegree: {}'.format(indegree, outdegree))
 
 
+    def MatrixToList(self):
+        # adding  vertices to adjacency list
+        for i in range(0, len(self.vertices)):
+            self.adjList.append(self.vertices.pop(0))
+
+        # add neighbors for each vertex added to the adjacency list
+        for vertex in self.adjList:
+            # search for the respective vertex line index in the adjacency matrix
+            for lineIndex in range(0, len(self.adjMatrix)):
+                if lineIndex == vertex.index:
+                    # search for target positions in the line that have 1 assigned to them
+                    for targetIndex in range(0, len(self.adjMatrix[lineIndex])):
+                        if self.adjMatrix[lineIndex][targetIndex] == 1:
+                            # search for the vertex that has same index as the target
+                            for otherVertex in self.adjList:
+                                if otherVertex.index == targetIndex:
+                                    vertex.neighbors.append(otherVertex)
+                                    break # break after finding the target vertex
+                    break # break after finding the right line of the matrix
+                    
+
+
+
+
+
+
+    def ListToMatrix(self):
+        pass
+
 # ----- END OFGRAPH CLASS -----
 
 
@@ -371,11 +403,9 @@ def ShowVertexDegree(graphId, vertexId):
             graph.VertexDegree(vertexId)
 
 
-'''
-This function opens, reads and closes the entrada.txt input file. 
+'''This function opens, reads and closes the entrada.txt input file. 
 After reading it, it produces de fileCommands global list, wich contains
-a list of lists with commands and names for the instances of the classes.
-'''
+a list of lists with commands and names for the instances of the classes.'''
 def CommandInput():    
     newFile = open('entrada.txt', 'r')
     fileLines = newFile.read().split('\n')
