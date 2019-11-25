@@ -2,8 +2,8 @@
 *Should always be one of the first commmands
 DirectedGraph
 
-*data_type graph_id
-Graph graph1
+*data_type graph_id AdjList/AdjMatrix
+Graph graph1 AdjMatrix
 
 *data_type graph_id vertex_id
 Vertex graph1 vertex1
