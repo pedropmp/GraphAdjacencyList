@@ -50,31 +50,29 @@ class Graph:
 
     '''Graph method that shows adjacency list and its linked lists'''
     def ShowList(self):
-        if self.list:
-            print('\n----- Adjacency list -----')
-            for vertex in self.adjList:
-                print('{}'.format(vertex), end=' -> ')
-                for neighbor in vertex.neighbors:
-                    print('{}'.format(neighbor), end=' -> ')
-                print('none')
-                sleep(.5)
-            print('')
-            sleep(1)
-        else:
-            print('\n{}'.format('----- Adjacency matrix -----'))
-            print('{0: ^8}'.format(' '), end=' ')
-            for vertex in self.vertices:
-                print('{0: ^8}'.format(str(vertex)), end=' ')
-            print('')
+        #if self.list:
+        print('\n----- Adjacency list -----')
+        for vertex in self.adjList:
+            print('{}'.format(vertex), end=' -> ')
+            print(vertex.neighbors)
+            for neighbor in vertex.neighbors:
+                print('{}'.format(neighbor), end=' -> ')
+            print('none')
+        print('')
+        #else:
+        print('\n{}'.format('----- Adjacency matrix -----'))
+        print('{0: ^8}'.format(' '), end=' ')
+        for vertex in self.vertices:
+            print('{0: ^8}'.format(str(vertex)), end=' ')
+        print('')
 
-            for lineIndex in range(0, len(self.adjMatrix)):
-                print('{0: ^8}'.format(str(self.vertices[lineIndex])), end=' ')
-                for edge in self.adjMatrix[lineIndex]:
-                    print('{0: ^8}'.format(str(edge)), end=' ')
-                print('')
-                sleep(.5)
+        for lineIndex in range(0, len(self.adjMatrix)):
+            print('{0: ^8}'.format(str(self.vertices[lineIndex])), end=' ')
+            for edge in self.adjMatrix[lineIndex]:
+                print('{0: ^8}'.format(str(edge)), end=' ')
             print('')
-            sleep(1)
+        print('')
+
                 
 
     '''
@@ -116,7 +114,7 @@ class Graph:
                     break
         else:
             deleted = False
-            for vertex in self.vertices:
+            for vertex in list(self.vertices):
                 #deleting edges from vertex or bidirectional edges
                 if vertex.id == vertexId:
                     del self.adjMatrix[vertex.index]
@@ -126,9 +124,10 @@ class Graph:
                     self.vertices.remove(vertex)
                     print('{} vertex deleted.\n'.format(vertexId))
                     deleted = True
-                else:
+                else: 
                     if deleted:
                         vertex.index -= 1
+
 
     '''Graph method that searches for both vertices and updates its neighbors list adding a new neighbor
     due to edge creation'''
@@ -321,11 +320,9 @@ class Graph:
                     # search for target positions in the line that have 1 assigned to them
                     for targetIndex in range(0, len(self.adjMatrix[lineIndex])):
                         if self.adjMatrix[lineIndex][targetIndex] == 1:
-                            print('adjMatrix[{}][{}] = {}'.format(lineIndex, targetIndex, self.adjMatrix[lineIndex][targetIndex]))
                             # search for the vertex that has same index as the target
                             for otherVertex in self.adjList:
                                 if otherVertex.index == targetIndex:
-                                    print('Achou targetIndex')
                                     vertex.neighbors.append(otherVertex)
                                     break # break after finding the target vertex
                     break # break after finding the right line of the matrix
@@ -337,7 +334,29 @@ class Graph:
 
 
     def ListToMatrix(self):
-        pass
+        i = 0
+        self.adjMatrix = []
+        self.vertices = []
+        for vertex in self.adjList:
+            # creating adjacency matrix filled of zeros
+            line = [0]*len(self.adjList)
+            self.adjMatrix.append(line)
+
+            # giving each vertex its index for the matrix representation
+            vertex.index = i
+            i += 1
+        
+        for vertex in self.adjList:
+            for neighbor in vertex.neighbors:
+                self.adjMatrix[vertex.index][neighbor.index] = 1
+        
+        for vertex in list(self.adjList):
+            self.vertices.append(self.adjList.pop(0))
+
+        del self.adjList[:]
+        self.adjList = []
+        self.list = False
+
 
 # ----- END OFGRAPH CLASS -----
 
@@ -361,7 +380,6 @@ def NewVertex(graphId, vertexId):
 '''This function will try to delete a vertex given its ID for a specific graph'''
 def DelVertex(graphId, vertexId):
     print('Deleting vertex {}...'.format(vertexId))
-    sleep(1)
     for graph in graphs:
         if graph.id == graphId:
             graph.RemVertex(vertexId) #calling graph remove vertex method
@@ -372,7 +390,6 @@ def NewEdge(graphId, vertexId1, vertexId2):
     for graph in graphs:
         if graph.id == graphId:
             print('Graph found. Creating new edge...', end=' ')
-            sleep(.5)
             graph.InsertEdge(vertexId1, vertexId2)
 
 
@@ -381,7 +398,6 @@ def DelEdge(graphId, vertexId1, vertexId2):
     for graph in graphs:
         if graph.id == graphId:
             print('Graph found. Searching vertices(s)...', end= ' ')
-            sleep(.5)
             graph.RemEdge(vertexId1, vertexId2)
 
 
@@ -412,6 +428,14 @@ def ConfigMatrixToList(graphId):
         if graph.id == graphId:
             graph.MatrixToList()
 
+    
+'''This function calls the graph method that changes the graph representation from list to matrix of
+adjacency'''
+def ConfigListToMatrix(graphId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.ListToMatrix()
+
 
 '''This function opens, reads and closes the entrada.txt input file. 
 After reading it, it produces de fileCommands global list, wich contains
@@ -432,7 +456,6 @@ def CommandInput():
             print('{} '.format(command), end= '')
         print('')
     print('\n')
-    sleep(2)
     system('cls')
     newFile.close()
  
@@ -469,7 +492,9 @@ def menu():
         elif command[0].lower() == 'degree':
             ShowVertexDegree(command[1], command[2])
         elif command[0].lower() == 'configmatrixtolist':
-            ConfigMatrixToList(command[1])    
+            ConfigMatrixToList(command[1])
+        elif command[0].lower() == 'configlisttomatrix':
+            ConfigListToMatrix(command[1])    
 
 # ----- END OF MAIN FUNCTIONS -----
 

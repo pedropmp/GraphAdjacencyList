@@ -38,7 +38,14 @@ Degree graph1 v5
 ConfigMatrixToList graph1
 Show graph1
 
+ConfigListToMatrix graph1
+Show graph1
 
+ConfigMatrixToList graph1
+Show graph1
+
+ConfigListToMatrix graph1
+Show graph1
 
 
 
