@@ -321,17 +321,19 @@ class Graph:
                     # search for target positions in the line that have 1 assigned to them
                     for targetIndex in range(0, len(self.adjMatrix[lineIndex])):
                         if self.adjMatrix[lineIndex][targetIndex] == 1:
+                            print('adjMatrix[{}][{}] = {}'.format(lineIndex, targetIndex, self.adjMatrix[lineIndex][targetIndex]))
                             # search for the vertex that has same index as the target
                             for otherVertex in self.adjList:
                                 if otherVertex.index == targetIndex:
+                                    print('Achou targetIndex')
                                     vertex.neighbors.append(otherVertex)
                                     break # break after finding the target vertex
                     break # break after finding the right line of the matrix
-                    
-
-
-
-
+        
+        for vertex in self.adjList:
+            vertex.index = None
+        self.list = True
+        self.adjMatrix = []
 
 
     def ListToMatrix(self):
@@ -403,6 +405,14 @@ def ShowVertexDegree(graphId, vertexId):
             graph.VertexDegree(vertexId)
 
 
+'''This function calls the graph method that changes the graph representation from matrix to list of
+adjacency'''
+def ConfigMatrixToList(graphId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.MatrixToList()
+
+
 '''This function opens, reads and closes the entrada.txt input file. 
 After reading it, it produces de fileCommands global list, wich contains
 a list of lists with commands and names for the instances of the classes.'''
@@ -458,6 +468,8 @@ def menu():
             ShowSourceSinks(command[1])
         elif command[0].lower() == 'degree':
             ShowVertexDegree(command[1], command[2])
+        elif command[0].lower() == 'configmatrixtolist':
+            ConfigMatrixToList(command[1])    
 
 # ----- END OF MAIN FUNCTIONS -----
 

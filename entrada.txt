@@ -33,9 +33,10 @@ DelVertex graph1 v1
 Show graph1
 
 SourcesSinks graph1
-
 Degree graph1 v5
 
+ConfigMatrixToList graph1
+Show graph1
 
 
 
