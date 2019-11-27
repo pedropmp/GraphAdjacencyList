@@ -50,28 +50,28 @@ class Graph:
 
     '''Graph method that shows adjacency list and its linked lists'''
     def ShowList(self):
-        #if self.list:
-        print('\n----- Adjacency list -----')
-        for vertex in self.adjList:
-            print('{}'.format(vertex), end=' -> ')
-            print(vertex.neighbors)
-            for neighbor in vertex.neighbors:
-                print('{}'.format(neighbor), end=' -> ')
-            print('none')
-        print('')
-        #else:
-        print('\n{}'.format('----- Adjacency matrix -----'))
-        print('{0: ^8}'.format(' '), end=' ')
-        for vertex in self.vertices:
-            print('{0: ^8}'.format(str(vertex)), end=' ')
-        print('')
-
-        for lineIndex in range(0, len(self.adjMatrix)):
-            print('{0: ^8}'.format(str(self.vertices[lineIndex])), end=' ')
-            for edge in self.adjMatrix[lineIndex]:
-                print('{0: ^8}'.format(str(edge)), end=' ')
+        if self.list:
+            print('\n----- Adjacency list -----')
+            for vertex in self.adjList:
+                print('{}'.format(vertex), end=' -> ')
+                for neighbor in vertex.neighbors:
+                    print('{}'.format(neighbor), end=' -> ')
+                print('none')
             print('')
-        print('')
+
+        else:
+            print('\n{}'.format('----- Adjacency matrix -----'))
+            print('{0: ^8}'.format(' '), end=' ')
+            for vertex in self.vertices:
+                print('{0: ^8}'.format(str(vertex)), end=' ')
+            print('')
+
+            for lineIndex in range(0, len(self.adjMatrix)):
+                print('{0: ^8}'.format(str(self.vertices[lineIndex])), end=' ')
+                for edge in self.adjMatrix[lineIndex]:
+                    print('{0: ^8}'.format(str(edge)), end=' ')
+                print('')
+            print('')
 
                 
 
@@ -350,12 +350,72 @@ class Graph:
             for neighbor in vertex.neighbors:
                 self.adjMatrix[vertex.index][neighbor.index] = 1
         
+        for vertex in self.adjList:
+            vertex.neighbors = []
+
         for vertex in list(self.adjList):
             self.vertices.append(self.adjList.pop(0))
 
         del self.adjList[:]
         self.adjList = []
         self.list = False
+
+
+    def BFS(self, vertexId):
+        if self.list:
+            # setting up vertices for search
+            queue = []
+            for vertex in self.adjList:
+                if vertex.id == vertexId:
+                    vertex.color = 'gray'
+                    vertex.d = 0
+                    vertex.pi = None
+                    queue.append(vertex)
+                else:
+                    vertex.color = 'white'
+                    vertex.d = 1000
+                    vertex.pi = None
+            
+            print('\nQueue: ', end= ' ')
+            for vertex in queue:
+                print(vertex, end=' ')
+            print('')
+            print('----- Graph colors -----')
+            for vertex in self.adjList:
+                print('{0: ^8}'.format(vertex.id), end= ' ')
+            print('')
+            for vertex in self.adjList:
+                print('{0: ^8}'.format(vertex.color), end= ' ')
+            print('')
+            for vertex in self.adjList:
+                    print('{0: ^8}'.format(vertex.d), end= ' ')
+            print('')
+
+            while queue:
+                vertex = queue.pop(0)
+                for neighbor in vertex.neighbors:
+                    if neighbor.color == 'white':
+                        neighbor.color = 'gray'
+                        neighbor.d = vertex.d + 1
+                        neighbor.pi = vertex
+                        queue.append(neighbor)
+                vertex.color = 'black'
+
+                print('\nVertex: {}'.format(vertex))
+                print('Queue: ', end= ' ')
+                for vertex in queue:
+                    print(vertex, end=' ')
+                print('')
+                print('----- Graph colors -----')
+                for vertex in self.adjList:
+                    print('{0: ^8}'.format(vertex.id), end= ' ')
+                print('')
+                for vertex in self.adjList:
+                    print('{0: ^8}'.format(vertex.color), end= ' ')
+                print('')
+                for vertex in self.adjList:
+                    print('{0: ^8}'.format(vertex.d), end= ' ')
+                print('')
 
 
 # ----- END OFGRAPH CLASS -----
@@ -437,6 +497,11 @@ def ConfigListToMatrix(graphId):
             graph.ListToMatrix()
 
 
+def CallBFS(graphId, vertexId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.BFS(vertexId)
+
 '''This function opens, reads and closes the entrada.txt input file. 
 After reading it, it produces de fileCommands global list, wich contains
 a list of lists with commands and names for the instances of the classes.'''
@@ -494,7 +559,10 @@ def menu():
         elif command[0].lower() == 'configmatrixtolist':
             ConfigMatrixToList(command[1])
         elif command[0].lower() == 'configlisttomatrix':
-            ConfigListToMatrix(command[1])    
+            ConfigListToMatrix(command[1])
+        elif command[0].lower() == 'bfs':
+            CallBFS(command[1], command[2])
+            
 
 # ----- END OF MAIN FUNCTIONS -----
 
