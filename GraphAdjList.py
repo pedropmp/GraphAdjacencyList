@@ -60,7 +60,8 @@ class Graph:
             print('')
 
         else:
-            print('\n{}'.format('----- Adjacency matrix -----'))
+            message = ' Adjacency matrix '.center(len(self.vertices) * 9, '-')
+            print('\n', message)
             print('{0: ^8}'.format(' '), end=' ')
             for vertex in self.vertices:
                 print('{0: ^8}'.format(str(vertex)), end=' ')
@@ -147,7 +148,7 @@ class Graph:
                                 first_vertex.neighbors.append(second_vertex)
                                 second_vertex.neighbors.append(first_vertex)
                                 print('Edge {} <-> {} created.'.format(vertexId1, vertexId2))
-                            sleep(.5)
+                                
         else:
             # search for first vertex
             for first_vertex in self.vertices:
@@ -163,7 +164,6 @@ class Graph:
                                 self.adjMatrix[first_vertex.index][second_vertex.index] = 1
                                 self.adjMatrix[second_vertex.index][first_vertex.index] = 1
                                 print('Edge {} <-> {} created.'.format(vertexId1, vertexId2))
-                            sleep(.5)
 
 
     '''Graph method that searches for two vertices and if they exist in the adjacency list, their neighbor's list
@@ -179,15 +179,12 @@ class Graph:
                             print('Both vertices found.')
                             if directed:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.RemNeighbor(first_vertex, second_vertex)
                             else:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.RemNeighbor(first_vertex, second_vertex)
 
                                 print('Deleting edge {} -> {}...'.format(vertexId2, vertexId1), end= ' ')
-                                sleep(.5)
                                 self.RemNeighbor(second_vertex, first_vertex)
                             break
         else:
@@ -200,23 +197,17 @@ class Graph:
                             print('Both vertices found.')
                             if directed:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.adjMatrix[first_vertex.index][second_vertex.index] = 0
                                 print('Not a neighbor anymore.')
-                                sleep(.5)
 
                             else:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.adjMatrix[first_vertex.index][second_vertex.index] = 0
                                 print('Not a neighbor anymore.')
-                                sleep(.5)
                                 
                                 print('Deleting edge {} -> {}...'.format(vertexId2, vertexId1), end= ' ')
-                                sleep(.5)
                                 self.adjMatrix[second_vertex.index][first_vertex.index] = 0
                                 print('Not a neighbor anymore.')
-                                sleep(.5)
                             break
 
     '''Auxiliary method for the RemEdge method. This will search by a neighbor and pop it from the neighbor's list
@@ -227,7 +218,6 @@ class Graph:
                 if vertex_obj.neighbors[i] == neighbor:
                     vertex_obj.neighbors.pop(i)
                     print('Not a neighbor anymore.')
-                    sleep(.5)
                     break
 
     '''This graph method identifies the sources and sinks in the and shows its ids'''
@@ -376,20 +366,7 @@ class Graph:
                     vertex.d = 1000
                     vertex.pi = None
             
-            print('\nQueue: ', end= ' ')
-            for vertex in queue:
-                print(vertex, end=' ')
-            print('')
-            print('----- Graph colors -----')
-            for vertex in self.adjList:
-                print('{0: ^8}'.format(vertex.id), end= ' ')
-            print('')
-            for vertex in self.adjList:
-                print('{0: ^8}'.format(vertex.color), end= ' ')
-            print('')
-            for vertex in self.adjList:
-                    print('{0: ^8}'.format(vertex.d), end= ' ')
-            print('')
+            self.ShowColors(queue)
 
             while queue:
                 vertex = queue.pop(0)
@@ -400,22 +377,77 @@ class Graph:
                         neighbor.pi = vertex
                         queue.append(neighbor)
                 vertex.color = 'black'
+                
+                self.ShowColors(queue)
 
-                print('\nVertex: {}'.format(vertex))
-                print('Queue: ', end= ' ')
-                for vertex in queue:
-                    print(vertex, end=' ')
-                print('')
-                print('----- Graph colors -----')
-                for vertex in self.adjList:
-                    print('{0: ^8}'.format(vertex.id), end= ' ')
-                print('')
-                for vertex in self.adjList:
-                    print('{0: ^8}'.format(vertex.color), end= ' ')
-                print('')
-                for vertex in self.adjList:
-                    print('{0: ^8}'.format(vertex.d), end= ' ')
-                print('')
+        else:
+            # setting up vertices for search
+            queue = []
+            for vertex in self.vertices:
+                if vertex.id == vertexId:
+                    vertex.color = 'gray'
+                    vertex.d = 0
+                    vertex.pi = None
+                    queue.append(vertex)
+                else:
+                    vertex.color = 'white'
+                    vertex.d = 1000
+                    vertex.pi = None
+            
+            self.ShowColorsList(queue)
+
+            while queue:
+                vertex = queue.pop(0)
+                # traverse neighbors
+                for neighborIndex in range(0, len(self.adjMatrix[vertex.index])):
+                    # look for an edge in the position (vertex.index, neighborIndex)
+                    if self.adjMatrix[vertex.index][neighborIndex] == 1:
+                        for neighbor in self.vertices:
+                            # find target vertex
+                            if neighbor.index == neighborIndex and neighbor.color == 'white':
+                                neighbor.color = 'gray'
+                                neighbor.d = vertex.d + 1
+                                neighbor.pi = vertex
+                                queue.append(neighbor)
+                vertex.color = 'black'
+                
+                self.ShowColorsMatrix(queue)
+
+
+    def ShowColorsList(self, queue):
+        print('\nQueue: ', end= ' ')
+        for vertex in queue:
+            print(vertex, end=' ')
+        print('')
+        message = ' Graph Colors '.center(len(self.adjList) * 9, '-')
+        print('\n', message)
+        for vertex in self.adjList:
+            print('{0: ^8}'.format(vertex.id), end= ' ')
+        print('')
+        for vertex in self.adjList:
+            print('{0: ^8}'.format(vertex.color), end= ' ')
+        print('')
+        for vertex in self.adjList:
+                print('{0: ^8}'.format(vertex.d), end= ' ')
+        print('')
+
+
+    def ShowColorsMatrix(self, queue):
+        print('\nQueue: ', end= ' ')
+        for vertex in queue:
+            print(vertex, end=' ')
+        print('')
+        message = ' Graph Colors '.center(len(self.adjMatrix) * 9, '-')
+        print('\n', message)
+        for vertex in self.vertices:
+            print('{0: ^8}'.format(vertex.id), end= ' ')
+        print('')
+        for vertex in self.vertices:
+            print('{0: ^8}'.format(vertex.color), end= ' ')
+        print('')
+        for vertex in self.vertices:
+                print('{0: ^8}'.format(vertex.d), end= ' ')
+        print('')
 
 
 # ----- END OFGRAPH CLASS -----
