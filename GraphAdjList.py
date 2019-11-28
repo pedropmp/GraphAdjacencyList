@@ -19,6 +19,10 @@ class Vertex:
         self.id = str(id)
         self.neighbors = []
         self.index = index
+        self.color = None
+        self.d = None
+        self.pi = None
+        self.f = None
 
     def __str__(self):
         return "{}".format(self.id)
@@ -54,11 +58,11 @@ class Graph:
                 for neighbor in vertex.neighbors:
                     print('{}'.format(neighbor), end=' -> ')
                 print('none')
-                sleep(.5)
             print('')
-            sleep(1)
+
         else:
-            print('\n{}'.format('----- Adjacency matrix -----'))
+            message = ' Adjacency matrix '.center(len(self.vertices) * 9, '-')
+            print('\n', message)
             print('{0: ^8}'.format(' '), end=' ')
             for vertex in self.vertices:
                 print('{0: ^8}'.format(str(vertex)), end=' ')
@@ -69,9 +73,8 @@ class Graph:
                 for edge in self.adjMatrix[lineIndex]:
                     print('{0: ^8}'.format(str(edge)), end=' ')
                 print('')
-                sleep(.5)
             print('')
-            sleep(1)
+
                 
 
     '''
@@ -113,7 +116,7 @@ class Graph:
                     break
         else:
             deleted = False
-            for vertex in self.vertices:
+            for vertex in list(self.vertices):
                 #deleting edges from vertex or bidirectional edges
                 if vertex.id == vertexId:
                     del self.adjMatrix[vertex.index]
@@ -123,9 +126,10 @@ class Graph:
                     self.vertices.remove(vertex)
                     print('{} vertex deleted.\n'.format(vertexId))
                     deleted = True
-                else:
+                else: 
                     if deleted:
                         vertex.index -= 1
+
 
     '''Graph method that searches for both vertices and updates its neighbors list adding a new neighbor
     due to edge creation'''
@@ -145,7 +149,7 @@ class Graph:
                                 first_vertex.neighbors.append(second_vertex)
                                 second_vertex.neighbors.append(first_vertex)
                                 print('Edge {} <-> {} created.'.format(vertexId1, vertexId2))
-                            sleep(.5)
+                                
         else:
             # search for first vertex
             for first_vertex in self.vertices:
@@ -161,7 +165,6 @@ class Graph:
                                 self.adjMatrix[first_vertex.index][second_vertex.index] = 1
                                 self.adjMatrix[second_vertex.index][first_vertex.index] = 1
                                 print('Edge {} <-> {} created.'.format(vertexId1, vertexId2))
-                            sleep(.5)
 
 
     '''Graph method that searches for two vertices and if they exist in the adjacency list, their neighbor's list
@@ -177,15 +180,12 @@ class Graph:
                             print('Both vertices found.')
                             if directed:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.RemNeighbor(first_vertex, second_vertex)
                             else:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.RemNeighbor(first_vertex, second_vertex)
 
                                 print('Deleting edge {} -> {}...'.format(vertexId2, vertexId1), end= ' ')
-                                sleep(.5)
                                 self.RemNeighbor(second_vertex, first_vertex)
                             break
         else:
@@ -198,23 +198,17 @@ class Graph:
                             print('Both vertices found.')
                             if directed:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.adjMatrix[first_vertex.index][second_vertex.index] = 0
                                 print('Not a neighbor anymore.')
-                                sleep(.5)
 
                             else:
                                 print('Deleting edge {} -> {}...'.format(vertexId1, vertexId2), end= ' ')
-                                sleep(.5)
                                 self.adjMatrix[first_vertex.index][second_vertex.index] = 0
                                 print('Not a neighbor anymore.')
-                                sleep(.5)
                                 
                                 print('Deleting edge {} -> {}...'.format(vertexId2, vertexId1), end= ' ')
-                                sleep(.5)
                                 self.adjMatrix[second_vertex.index][first_vertex.index] = 0
                                 print('Not a neighbor anymore.')
-                                sleep(.5)
                             break
 
     '''Auxiliary method for the RemEdge method. This will search by a neighbor and pop it from the neighbor's list
@@ -225,7 +219,6 @@ class Graph:
                 if vertex_obj.neighbors[i] == neighbor:
                     vertex_obj.neighbors.pop(i)
                     print('Not a neighbor anymore.')
-                    sleep(.5)
                     break
 
     '''This graph method identifies the sources and sinks in the and shows its ids'''
@@ -305,6 +298,221 @@ class Graph:
         print('Indegree: {}\nOutdegree: {}'.format(indegree, outdegree))
 
 
+    def MatrixToList(self):
+        # adding  vertices to adjacency list
+        for i in range(0, len(self.vertices)):
+            self.adjList.append(self.vertices.pop(0))
+
+        # add neighbors for each vertex added to the adjacency list
+        for vertex in self.adjList:
+            # search for the respective vertex line index in the adjacency matrix
+            for lineIndex in range(0, len(self.adjMatrix)):
+                if lineIndex == vertex.index:
+                    # search for target positions in the line that have 1 assigned to them
+                    for targetIndex in range(0, len(self.adjMatrix[lineIndex])):
+                        if self.adjMatrix[lineIndex][targetIndex] == 1:
+                            # search for the vertex that has same index as the target
+                            for otherVertex in self.adjList:
+                                if otherVertex.index == targetIndex:
+                                    vertex.neighbors.append(otherVertex)
+                                    break # break after finding the target vertex
+                    break # break after finding the right line of the matrix
+        
+        for vertex in self.adjList:
+            vertex.index = None
+        self.list = True
+        self.adjMatrix = []
+
+
+    def ListToMatrix(self):
+        i = 0
+        self.adjMatrix = []
+        self.vertices = []
+        for vertex in self.adjList:
+            # creating adjacency matrix filled of zeros
+            line = [0]*len(self.adjList)
+            self.adjMatrix.append(line)
+
+            # giving each vertex its index for the matrix representation
+            vertex.index = i
+            i += 1
+        
+        for vertex in self.adjList:
+            for neighbor in vertex.neighbors:
+                self.adjMatrix[vertex.index][neighbor.index] = 1
+        
+        for vertex in self.adjList:
+            vertex.neighbors = []
+
+        self.numberVertices = len(self.adjList)
+        for vertex in list(self.adjList):
+            self.vertices.append(self.adjList.pop(0))
+
+        del self.adjList[:]
+        self.adjList = []
+        self.list = False
+
+
+    def BFS(self, vertexId):
+        if self.list:
+            # setting up vertices for search
+            queue = []
+            for vertex in self.adjList:
+                if vertex.id == vertexId:
+                    vertex.color = 'gray'
+                    vertex.d = 0
+                    vertex.pi = None
+                    queue.append(vertex)
+                else:
+                    vertex.color = 'white'
+                    vertex.d = 1000
+                    vertex.pi = None
+            
+            self.ShowColorsList(queue)
+
+            while queue:
+                vertex = queue.pop(0)
+                for neighbor in vertex.neighbors:
+                    if neighbor.color == 'white':
+                        neighbor.color = 'gray'
+                        neighbor.d = vertex.d + 1
+                        neighbor.pi = vertex
+                        queue.append(neighbor)
+                vertex.color = 'black'
+                
+                self.ShowColorsList(queue)
+
+        else:
+            # setting up vertices for search
+            queue = []
+            for vertex in self.vertices:
+                if vertex.id == vertexId:
+                    vertex.color = 'gray'
+                    vertex.d = 0
+                    vertex.pi = None
+                    queue.append(vertex)
+                else:
+                    vertex.color = 'white'
+                    vertex.d = 1000
+                    vertex.pi = None
+            
+            self.ShowColorsMatrix(queue)
+
+            while queue:
+                vertex = queue.pop(0)
+                # traverse neighbors
+                for neighborIndex in range(0, len(self.adjMatrix[vertex.index])):
+                    # look for an edge in the position (vertex.index, neighborIndex)
+                    if self.adjMatrix[vertex.index][neighborIndex] == 1:
+                        print('{} {}'.format(vertex.index+1, neighborIndex+1))
+                        for neighbor in self.vertices:
+                            # find target vertex
+                            if neighbor.index == neighborIndex and neighbor.color == 'white':
+                                neighbor.color = 'gray'
+                                neighbor.d = vertex.d + 1
+                                neighbor.pi = vertex
+                                queue.append(neighbor)
+                vertex.color = 'black'
+                
+                self.ShowColorsMatrix(queue)
+
+
+    def ShowColorsList(self, queue):
+        print('\nQueue: ', end= ' ')
+        for vertex in queue:
+            print(vertex, end=' ')
+        print('')
+        message = ' Graph Colors '.center(len(self.adjList) * 9, '-')
+        print('\n', message)
+        for vertex in self.adjList:
+            print('{0: ^8}'.format(vertex.id), end= ' ')
+        print('')
+        for vertex in self.adjList:
+            print('{0: ^8}'.format(vertex.color), end= ' ')
+        print('')
+        for vertex in self.adjList:
+            print('{0: ^8}'.format(str(vertex.d)), end= ' ')
+        print('')
+
+
+    def ShowColorsMatrix(self, queue):
+        print('\nQueue: ', end= ' ')
+        for vertex in queue:
+            print(vertex, end=' ')
+        print('')
+        message = ' Graph Colors '.center(len(self.adjMatrix) * 9, '-')
+        print('\n', message)
+        for vertex in self.vertices:
+            print('{0: ^8}'.format(vertex.id), end= ' ')
+        print('')
+        for vertex in self.vertices:
+            print('{0: ^8}'.format(vertex.color), end= ' ')
+        print('')
+        for vertex in self.vertices:
+            print('{0: ^8}'.format(vertex.d), end= ' ')
+        print('')
+
+
+    def DFS(self, vertexId):
+        if self.list:
+            global time
+            time = 0
+            for vertex in self.adjList:
+                vertex.color = 'white'
+                vertex.pi = None
+
+            for vertex in self.adjList:
+                if vertex.color == 'white':
+                    self.DFSVisit(vertex)
+            print('\n----- DFS -----')
+            self.ShowColorsList(self.adjList)
+        
+        '''else:
+            global time
+            time = 0
+            for vertex in self.adjList:
+                vertex.color = 'white'
+                vertex.pi = None
+            for vertex in self.adjList:
+                if vertex.color == 'white':
+                    self.DFSVisit(vertex)
+            print('\n----- DFS -----')
+            self.ShowColorsList(self.adjList)'''
+
+    
+    def DFSVisit(self, vertex):
+        if self.list:
+            global time
+            time = time + 1
+            vertex.d = time
+            vertex.color = 'gray'
+            self.ShowColorsList(self.adjList)
+            for neighbor in vertex.neighbors:
+                print('neighbor: {}'.format(neighbor))
+                if neighbor.color == 'white':
+                    neighbor.pi = vertex
+                    self.DFSVisit(neighbor)
+            vertex.color = 'black'
+            time = time + 1
+            vertex.f = time
+
+        '''else:
+            global time
+            time = time + 1
+            vertex.d = time
+            vertex.color = 'gray'
+            self.ShowColorsList(self.adjList)
+            sleep(2)
+            for neighbor in vertex.neighbors:
+                print('neighbor: {}'.format(neighbor))
+                if neighbor.color == 'white':
+                    neighbor.pi = vertex
+                    self.DFSVisit(neighbor)
+            vertex.color = 'black'
+            time = time + 1
+            vertex.f = time'''
+
+
 # ----- END OFGRAPH CLASS -----
 
 
@@ -327,7 +535,6 @@ def NewVertex(graphId, vertexId):
 '''This function will try to delete a vertex given its ID for a specific graph'''
 def DelVertex(graphId, vertexId):
     print('Deleting vertex {}...'.format(vertexId))
-    sleep(1)
     for graph in graphs:
         if graph.id == graphId:
             graph.RemVertex(vertexId) #calling graph remove vertex method
@@ -338,7 +545,6 @@ def NewEdge(graphId, vertexId1, vertexId2):
     for graph in graphs:
         if graph.id == graphId:
             print('Graph found. Creating new edge...', end=' ')
-            sleep(.5)
             graph.InsertEdge(vertexId1, vertexId2)
 
 
@@ -347,7 +553,6 @@ def DelEdge(graphId, vertexId1, vertexId2):
     for graph in graphs:
         if graph.id == graphId:
             print('Graph found. Searching vertices(s)...', end= ' ')
-            sleep(.5)
             graph.RemEdge(vertexId1, vertexId2)
 
 
@@ -371,13 +576,38 @@ def ShowVertexDegree(graphId, vertexId):
             graph.VertexDegree(vertexId)
 
 
-'''
-This function opens, reads and closes the entrada.txt input file. 
+'''This function calls the graph method that changes the graph representation from matrix to list of
+adjacency'''
+def ConfigMatrixToList(graphId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.MatrixToList()
+
+    
+'''This function calls the graph method that changes the graph representation from list to matrix of
+adjacency'''
+def ConfigListToMatrix(graphId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.ListToMatrix()
+
+
+def CallBFS(graphId, vertexId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.BFS(vertexId)
+
+
+def CallDFS(graphId, vertexId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.DFS(vertexId)
+
+'''This function opens, reads and closes the entrada.txt input file. 
 After reading it, it produces de fileCommands global list, wich contains
-a list of lists with commands and names for the instances of the classes.
-'''
+a list of lists with commands and names for the instances of the classes.'''
 def CommandInput():    
-    newFile = open('entrada.txt', 'r')
+    newFile = open('questao4.txt', 'r')
     fileLines = newFile.read().split('\n')
     global fileCommands
     fileCommands = []
@@ -392,7 +622,6 @@ def CommandInput():
             print('{} '.format(command), end= '')
         print('')
     print('\n')
-    sleep(2)
     system('cls')
     newFile.close()
  
@@ -428,6 +657,16 @@ def menu():
             ShowSourceSinks(command[1])
         elif command[0].lower() == 'degree':
             ShowVertexDegree(command[1], command[2])
+        elif command[0].lower() == 'configmatrixtolist':
+            ConfigMatrixToList(command[1])
+        elif command[0].lower() == 'configlisttomatrix':
+            ConfigListToMatrix(command[1])
+        elif command[0].lower() == 'bfs':
+            CallBFS(command[1], command[2])
+        elif command[0].lower() == 'dfs':
+            ConfigMatrixToList(command[1])
+            CallDFS(command[1], command[2])
+            
 
 # ----- END OF MAIN FUNCTIONS -----
 

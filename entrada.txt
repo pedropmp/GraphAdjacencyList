@@ -5,39 +5,50 @@ DirectedGraph
 *data_type graph_id AdjList/AdjMatrix
 Graph graph1 AdjMatrix
 
-*data_type graph_id vertex_id
-Vertex graph1 vertex1
-Vertex graph1 vertex2
-Vertex graph1 vertex3
-Vertex graph1 vertex4
-Vertex graph1 vertex5
-Vertex graph1 vertex6
+*data_type graph_id v_id
+Vertex graph1 u
+Vertex graph1 v
+Vertex graph1 w
+Vertex graph1 x
+Vertex graph1 y
+Vertex graph1 z
 
-*DelVertex graph1 vertex6
 
-Edge graph1 vertex1 vertex2
-Edge graph1 vertex1 vertex5
-Edge graph1 vertex1 vertex1
-Edge graph1 vertex2 vertex3
-Edge graph1 vertex2 vertex4
-Edge graph1 vertex2 vertex5
-Edge graph1 vertex3 vertex4
-Edge graph1 vertex4 vertex5
+*DelVertex graph1 v6
+
+Edge graph1 u v
+Edge graph1 u x
+Edge graph1 v y
+Edge graph1 w y
+Edge graph1 w z
+Edge graph1 x v
+Edge graph1 y x
+*Edge graph1 z z
 
 Show graph1
 
-DelEdge graph1 vertex1 vertex2
-Show graph1
+*DelEdge graph1 u v
+*Show graph1
 
-DelVertex graph1 vertex1
-Show graph1
+*DelVertex graph1 u
+*Show graph1
 
 SourcesSinks graph1
+Degree graph1 z
 
-Degree graph1 vertex5
+ConfigMatrixToList graph1
+Show graph1
 
+ConfigListToMatrix graph1
+Show graph1
 
+ConfigMatrixToList graph1
+Show graph1
 
+*ConfigListToMatrix graph1
+*Show graph1
 
+*BFS graph1 u
+DFS graph1 u
 
 
