@@ -22,6 +22,7 @@ class Vertex:
         self.color = None
         self.d = None
         self.pi = None
+        self.f = None
 
     def __str__(self):
         return "{}".format(self.id)
@@ -343,6 +344,7 @@ class Graph:
         for vertex in self.adjList:
             vertex.neighbors = []
 
+        self.numberVertices = len(self.adjList)
         for vertex in list(self.adjList):
             self.vertices.append(self.adjList.pop(0))
 
@@ -366,7 +368,7 @@ class Graph:
                     vertex.d = 1000
                     vertex.pi = None
             
-            self.ShowColors(queue)
+            self.ShowColorsList(queue)
 
             while queue:
                 vertex = queue.pop(0)
@@ -378,7 +380,7 @@ class Graph:
                         queue.append(neighbor)
                 vertex.color = 'black'
                 
-                self.ShowColors(queue)
+                self.ShowColorsList(queue)
 
         else:
             # setting up vertices for search
@@ -394,7 +396,7 @@ class Graph:
                     vertex.d = 1000
                     vertex.pi = None
             
-            self.ShowColorsList(queue)
+            self.ShowColorsMatrix(queue)
 
             while queue:
                 vertex = queue.pop(0)
@@ -402,6 +404,7 @@ class Graph:
                 for neighborIndex in range(0, len(self.adjMatrix[vertex.index])):
                     # look for an edge in the position (vertex.index, neighborIndex)
                     if self.adjMatrix[vertex.index][neighborIndex] == 1:
+                        print('{} {}'.format(vertex.index+1, neighborIndex+1))
                         for neighbor in self.vertices:
                             # find target vertex
                             if neighbor.index == neighborIndex and neighbor.color == 'white':
@@ -428,7 +431,7 @@ class Graph:
             print('{0: ^8}'.format(vertex.color), end= ' ')
         print('')
         for vertex in self.adjList:
-                print('{0: ^8}'.format(vertex.d), end= ' ')
+            print('{0: ^8}'.format(str(vertex.d)), end= ' ')
         print('')
 
 
@@ -446,8 +449,68 @@ class Graph:
             print('{0: ^8}'.format(vertex.color), end= ' ')
         print('')
         for vertex in self.vertices:
-                print('{0: ^8}'.format(vertex.d), end= ' ')
+            print('{0: ^8}'.format(vertex.d), end= ' ')
         print('')
+
+
+    def DFS(self, vertexId):
+        if self.list:
+            global time
+            time = 0
+            for vertex in self.adjList:
+                vertex.color = 'white'
+                vertex.pi = None
+
+            for vertex in self.adjList:
+                if vertex.color == 'white':
+                    self.DFSVisit(vertex)
+            print('\n----- DFS -----')
+            self.ShowColorsList(self.adjList)
+        
+        '''else:
+            global time
+            time = 0
+            for vertex in self.adjList:
+                vertex.color = 'white'
+                vertex.pi = None
+            for vertex in self.adjList:
+                if vertex.color == 'white':
+                    self.DFSVisit(vertex)
+            print('\n----- DFS -----')
+            self.ShowColorsList(self.adjList)'''
+
+    
+    def DFSVisit(self, vertex):
+        if self.list:
+            global time
+            time = time + 1
+            vertex.d = time
+            vertex.color = 'gray'
+            self.ShowColorsList(self.adjList)
+            for neighbor in vertex.neighbors:
+                print('neighbor: {}'.format(neighbor))
+                if neighbor.color == 'white':
+                    neighbor.pi = vertex
+                    self.DFSVisit(neighbor)
+            vertex.color = 'black'
+            time = time + 1
+            vertex.f = time
+
+        '''else:
+            global time
+            time = time + 1
+            vertex.d = time
+            vertex.color = 'gray'
+            self.ShowColorsList(self.adjList)
+            sleep(2)
+            for neighbor in vertex.neighbors:
+                print('neighbor: {}'.format(neighbor))
+                if neighbor.color == 'white':
+                    neighbor.pi = vertex
+                    self.DFSVisit(neighbor)
+            vertex.color = 'black'
+            time = time + 1
+            vertex.f = time'''
 
 
 # ----- END OFGRAPH CLASS -----
@@ -534,11 +597,17 @@ def CallBFS(graphId, vertexId):
         if graph.id == graphId:
             graph.BFS(vertexId)
 
+
+def CallDFS(graphId, vertexId):
+    for graph in graphs:
+        if graph.id == graphId:
+            graph.DFS(vertexId)
+
 '''This function opens, reads and closes the entrada.txt input file. 
 After reading it, it produces de fileCommands global list, wich contains
 a list of lists with commands and names for the instances of the classes.'''
 def CommandInput():    
-    newFile = open('entrada.txt', 'r')
+    newFile = open('questao4.txt', 'r')
     fileLines = newFile.read().split('\n')
     global fileCommands
     fileCommands = []
@@ -594,6 +663,9 @@ def menu():
             ConfigListToMatrix(command[1])
         elif command[0].lower() == 'bfs':
             CallBFS(command[1], command[2])
+        elif command[0].lower() == 'dfs':
+            ConfigMatrixToList(command[1])
+            CallDFS(command[1], command[2])
             
 
 # ----- END OF MAIN FUNCTIONS -----

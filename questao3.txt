@@ -1,0 +1,45 @@
+*BidirectedGraph/DirectedGraph
+*Should always be one of the first commmands
+BidirectedGraph
+
+*data_type graph_id AdjList/AdjMatrix
+Graph graph1 AdjList
+
+*data_type graph_id v_id
+Vertex graph1 v1
+Vertex graph1 v2
+Vertex graph1 v3
+Vertex graph1 v4
+Vertex graph1 v5
+Vertex graph1 v6
+Vertex graph1 v7
+
+Edge graph1 v1 v2
+Edge graph1 v1 v3
+Edge graph1 v1 v4
+Edge graph1 v2 v4
+Edge graph1 v2 v5
+Edge graph1 v3 v4
+Edge graph1 v3 v6
+Edge graph1 v4 v5
+Edge graph1 v4 v6
+Edge graph1 v4 v7
+Edge graph1 v5 v7
+Edge graph1 v6 v7
+
+Show graph1
+
+ConfigListToMatrix graph1
+Show graph1
+
+DelEdge graph1 v1 v2
+DelEdge graph1 v1 v4
+DelEdge graph1 v3 v4
+DelEdge graph1 v3 v6
+Show graph1
+
+Vertex graph1 v8
+Edge graph1 v2 v8
+Show graph1
+
+DFS graph1 v7
